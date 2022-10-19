@@ -2,6 +2,7 @@ import {Editor, MarkdownView, Notice, Plugin} from 'obsidian';
 import {DEFAULT_SETTINGS, SampleSettingTab, TTRPGUtilitiesSettings} from './settings/TTRPGUtilitiesSettings';
 import {DataviewApi, getAPI} from 'obsidian-dataview';
 import {InventoryGeneratorMarkdownRenderChild} from './InventoryGeneratorMarkdownRenderChild';
+import {initUUIDGen} from './utils/Utils';
 
 // Remember to rename these classes and interfaces!
 
@@ -10,14 +11,19 @@ export default class TTRPGUtilitiesPlugin extends Plugin {
 	dataview: DataviewApi;
 
 	async onload() {
+		initUUIDGen();
+
 		await this.loadSettings();
 
 		// This adds a simple command that can be triggered anywhere
 		this.addCommand({
 			id: 'open-sample-modal-simple',
 			name: 'Open sample modal (simple)',
-			callback: () => {
-				console.log('test');
+			callback: async () => {
+				let content = 'console.log(a); return a + 1;';
+				let func = new Function("a", content);
+				let result = await Promise.resolve(func(5));
+				console.log('out', result);
 			}
 		});
 
@@ -32,13 +38,11 @@ export default class TTRPGUtilitiesPlugin extends Plugin {
 		});
 
 		this.registerMarkdownCodeBlockProcessor('ttu-loot-gen', (source, el, ctx) => {
-			console.log('source', source);
-			console.log('ctx', ctx);
-
 			ctx.addChild(new InventoryGeneratorMarkdownRenderChild(
 				el,
 				this,
-				source
+				source,
+				ctx.sourcePath
 			));
 		})
 

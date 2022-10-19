@@ -6,3 +6,32 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
+
+.ttrpg-utilities-row-flex {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.ttrpg-utilities-expand {
+	flex: 1;
+}
+
+.ttrpg-settings-group {
+	padding: 0.75em 0;
+	border-top: 1px solid var(--background-modifier-border);
+}
+
+.ttrpg-settings-group > :first-child {
+	margin-top: 0;
+}
+
+.ttrpg-settings-group > :last-child {
+	margin-bottom: 0;
+}
+
+.ttrpg-settings-group > .setting-item {
+	margin: 0;
+	padding: 0.25em;
+	border: none;
+}
