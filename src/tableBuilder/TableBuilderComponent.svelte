@@ -33,7 +33,7 @@
 
 	<div>
 		{#each data.columns as column}
-			<div  class="ttrpg-settings-group">
+			<div  class="ttrpg-utilities-settings-group">
 				<div class="ttrpg-utilities-row-flex">
 					<h5 class="ttrpg-utilities-expand">{column.name}</h5>
 					<Button on:click={() => deleteColumn(column.id)} variant="destructive"  tooltip="Delete Column"><Icon iconName="x"></Icon></Button>

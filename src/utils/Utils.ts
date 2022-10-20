@@ -27,7 +27,7 @@ export class TTRPGUtilitiesParsingError extends Error {
 export interface InventoryGeneratorData {
 	id: string,
 	mode: InventoryGeneratorMode,
-	generatorSegmentData: InventoryGeneratorSegmentData[],
+	generatorSettings: InventoryGeneratorSettings,
 	itemIdField: string,
 	tableBuilderData: TableBuilderData,
 	generatedInventory: string[],
@@ -38,12 +38,14 @@ export enum InventoryGeneratorMode {
 	DISPLAY,
 }
 
-export interface InventoryGeneratorSegmentData {
+export interface InventoryGeneratorSettings {
 	id: string,
 	query: string,
 	filter: string,
 	maxItems: number,
 	useMaxTotalValue: boolean,
+	itemValueField: string,
+	itemValueDistribution: number,
 	maxTotalValue: number,
 }
 
