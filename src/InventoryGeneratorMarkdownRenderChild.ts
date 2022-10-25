@@ -1,7 +1,7 @@
 import {MarkdownRenderChild} from 'obsidian';
 import InventoryGenerator from './InventoryGenerator.svelte';
 import TTRPGUtilitiesPlugin from './main';
-import {getUUID, InventoryGeneratorData, InventoryGeneratorMode} from './utils/Utils';
+import {getDefaultInventoryGeneratorData, getUUID, InventoryGeneratorData, InventoryGeneratorMode} from './utils/Utils';
 import {DataArray, DataviewApi, Literal} from 'obsidian-dataview';
 import {createTable} from './tableBuilder/TableBuilder';
 
@@ -21,46 +21,24 @@ export class InventoryGeneratorMarkdownRenderChild extends MarkdownRenderChild {
 		this.fullDeclaration = fullDeclaration;
 		this.file = file;
 
-		this.data = {
-			id: getUUID(),
-			itemIdField: 'id',
-			mode: InventoryGeneratorMode.GENERATOR,
-			tableBuilderData: {
-				columns: [
-					{
-						id: getUUID(),
-						name: 'File',
-						data: '${item.file.link}',
-					},
-					{
-						id: getUUID(),
-						name: 'Cost',
-						data: '${item.cost}',
-					},
-				],
-			},
-			generatedInventory: [],
-			generatorSettings: {
-				id: getUUID(),
-				query: '"TTRPG Utils/items"',
-				filter: 'return items;',
-				maxItems: 10,
-				useMaxTotalValue: true,
-				itemValueField: 'cost',
-				itemValueDistribution: 0.3,
-				maxTotalValue: 10000,
-			},
-		};
+		this.loadData();
 
-		this.parseDeclaration();
-	}
-
-	parseDeclaration() {
 
 	}
 
-	saveDeclaration() {
+	getId(): string {
+		return this.fullDeclaration.replace(/( |\n)/g, '');
+	}
 
+	loadData() {
+		this.data = this.plugin.settings.inventoryGeneratorData.find(x => x.id === this.getId()) ?? getDefaultInventoryGeneratorData();
+		this.data.id = this.getId();
+	}
+
+	saveData() {
+		this.plugin.settings.inventoryGeneratorData = this.plugin.settings.inventoryGeneratorData.filter(x => x.id !== this.getId());
+		this.plugin.settings.inventoryGeneratorData.push(this.data);
+		this.plugin.saveSettings();
 	}
 
 	async generateInventory() {
@@ -219,6 +197,7 @@ export class InventoryGeneratorMarkdownRenderChild extends MarkdownRenderChild {
 			props: {
 				data: this.data,
 				generate: () => this.generateInventory(),
+				save: () => this.saveData(),
 			},
 		});
 

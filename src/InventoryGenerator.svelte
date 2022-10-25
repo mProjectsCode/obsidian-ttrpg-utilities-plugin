@@ -6,6 +6,7 @@
 
 	export let data: InventoryGeneratorData;
 	export let generate: () => Promise<void>;
+	export let save: () => Promise<void>;
 
 </script>
 
@@ -65,4 +66,5 @@
 	<TableBuilderComponent data={data.tableBuilderData}></TableBuilderComponent>
 	<Button on:click={() => console.log(data)}>log data</Button>
 	<Button on:click={() => generate()}>generate</Button>
+	<Button on:click={() => save()}>save</Button>
 </div>

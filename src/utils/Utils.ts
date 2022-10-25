@@ -49,7 +49,40 @@ export interface InventoryGeneratorSettings {
 	maxTotalValue: number,
 }
 
-let lut: string[] = [];
+export function getDefaultInventoryGeneratorData(): InventoryGeneratorData {
+	return {
+		id: 'INVALID',
+		itemIdField: 'id',
+		mode: InventoryGeneratorMode.GENERATOR,
+		tableBuilderData: {
+			columns: [
+				{
+					id: getUUID(),
+					name: 'File',
+					data: '${item.file.link}',
+				},
+				{
+					id: getUUID(),
+					name: 'Cost',
+					data: '${item.cost}',
+				},
+			],
+		},
+		generatedInventory: [],
+		generatorSettings: {
+			id: getUUID(),
+			query: '"TTRPG Utils/items"',
+			filter: 'return items;',
+			maxItems: 10,
+			useMaxTotalValue: true,
+			itemValueField: 'cost',
+			itemValueDistribution: 0.3,
+			maxTotalValue: 10000,
+		},
+	};
+}
+
+export let lut: string[] = [];
 
 export function initUUIDGen() {
 	for (let i = 0; i < 256; i++) {

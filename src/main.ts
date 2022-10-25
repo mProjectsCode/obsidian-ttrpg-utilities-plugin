@@ -38,6 +38,7 @@ export default class TTRPGUtilitiesPlugin extends Plugin {
 		});
 
 		this.registerMarkdownCodeBlockProcessor('ttu-loot-gen', (source, el, ctx) => {
+			console.log('test');
 			ctx.addChild(new InventoryGeneratorMarkdownRenderChild(
 				el,
 				this,
