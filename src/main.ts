@@ -15,18 +15,6 @@ export default class TTRPGUtilitiesPlugin extends Plugin {
 
 		await this.loadSettings();
 
-		// This adds a simple command that can be triggered anywhere
-		this.addCommand({
-			id: 'open-sample-modal-simple',
-			name: 'Open sample modal (simple)',
-			callback: async () => {
-				let content = 'console.log(a); return a + 1;';
-				let func = new Function("a", content);
-				let result = await Promise.resolve(func(5));
-				console.log('out', result);
-			}
-		});
-
 		// This adds an editor command that can perform some operation on the current editor instance
 		this.addCommand({
 			id: 'sample-editor-command',

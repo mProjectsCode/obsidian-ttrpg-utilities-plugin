@@ -1,7 +1,7 @@
 import {MarkdownRenderChild} from 'obsidian';
 import InventoryGenerator from './InventoryGenerator.svelte';
 import TTRPGUtilitiesPlugin from './main';
-import {getDefaultInventoryGeneratorData, getUUID, InventoryGeneratorData, InventoryGeneratorMode} from './utils/Utils';
+import {getDefaultInventoryGeneratorData, InventoryGeneratorData} from './utils/Utils';
 import {DataArray, DataviewApi, Literal} from 'obsidian-dataview';
 import {createTable} from './tableBuilder/TableBuilder';
 
@@ -22,8 +22,6 @@ export class InventoryGeneratorMarkdownRenderChild extends MarkdownRenderChild {
 		this.file = file;
 
 		this.loadData();
-
-
 	}
 
 	getId(): string {
@@ -44,12 +42,12 @@ export class InventoryGeneratorMarkdownRenderChild extends MarkdownRenderChild {
 	async generateInventory() {
 		const dv: DataviewApi = this.plugin.dataview;
 
-		let items: DataArray<Record<string, Literal>> = dv.pages(this.data.generatorSettings.query);
+		const items: DataArray<Record<string, Literal>> = dv.pages(this.data.generatorSettings.query);
 
 		let filter = this.data.generatorSettings.filter;
 		if (filter.contains('await')) filter = '(async () => { ' + filter + ' })()';
-		let func = new Function('items', filter);
-		let filteredItemsDataArray: DataArray<Record<string, Literal>> = await Promise.resolve(func(items));
+		const func = new Function('items', filter);
+		const filteredItemsDataArray: DataArray<Record<string, Literal>> = await Promise.resolve(func(items));
 		let filteredItemsArray: DvArray = filteredItemsDataArray.array();
 
 		console.log('out', filteredItemsArray);
@@ -65,7 +63,7 @@ export class InventoryGeneratorMarkdownRenderChild extends MarkdownRenderChild {
 				return true;
 			});
 
-			let {
+			const {
 				randomItems,
 				totalValue,
 			} = this.selectRandomItemsWithMaxTotalValue(filteredItemsArray, this.data.generatorSettings.maxTotalValue, this.data.generatorSettings.maxItems);
@@ -82,7 +80,7 @@ export class InventoryGeneratorMarkdownRenderChild extends MarkdownRenderChild {
 				return true;
 			});
 
-			let {randomItems, totalValue} = this.selectRandomItems(filteredItemsArray, this.data.generatorSettings.maxItems);
+			const {randomItems, totalValue} = this.selectRandomItems(filteredItemsArray, this.data.generatorSettings.maxItems);
 
 			//await dv.table(["File"], result.map(x => [x.file.link]), this.containerEl, this, this.file);
 			await this.createTable(randomItems);
@@ -97,10 +95,10 @@ export class InventoryGeneratorMarkdownRenderChild extends MarkdownRenderChild {
 
 	selectRandomItems(data: DvArray, maxItems: number): { randomItems: DvArray, totalValue: number } {
 		let totalValue = 0;
-		let randomItems: DvArray = [];
+		const randomItems: DvArray = [];
 
 		while (randomItems.length < maxItems) {
-			let item: Record<string, Literal> = this.getRandomItem(data);
+			const item: Record<string, Literal> = this.getRandomItem(data);
 
 			randomItems.push(item);
 			totalValue += item[this.data.generatorSettings.itemValueField];
@@ -115,20 +113,20 @@ export class InventoryGeneratorMarkdownRenderChild extends MarkdownRenderChild {
 		const leniency = 0.5;
 
 		let totalValue = 0;
-		let randomItems: DvArray = [];
+		const randomItems: DvArray = [];
 
 		while (randomItems.length < maxItems) {
-			let remainingValue = maxValue - totalValue;
+			const remainingValue = maxValue - totalValue;
 			// on the last item use the full remaining value as the target value
-			let targetValue = randomItems.length < maxItems - 1 ? remainingValue * valueWeight : remainingValue;
+			const targetValue = randomItems.length < maxItems - 1 ? remainingValue * valueWeight : remainingValue;
 
-			let items = this.filterByValue(dataArray, targetValue, leniency);
+			const items = this.filterByValue(dataArray, targetValue, leniency);
 			if (items.length === 0) {
 				console.warn('No item found with target value', targetValue);
 				break;
 			}
 
-			let item: Record<string, Literal> = this.getWeightedRandomItem(items, targetValue);
+			const item: Record<string, Literal> = this.getWeightedRandomItem(items, targetValue);
 
 			randomItems.push(item);
 			totalValue += item[this.data.generatorSettings.itemValueField];
@@ -155,10 +153,10 @@ export class InventoryGeneratorMarkdownRenderChild extends MarkdownRenderChild {
 		let comWeight = 0;
 
 		for (const d of data) {
-			let id: string = d[this.data.itemIdField];
-			let value: number = d[this.data.generatorSettings.itemValueField];
-			let weight: number = this.bellCurveFast((value - centerValue) / centerValue);
-			let comWeightStart = comWeight;
+			const id: string = d[this.data.itemIdField];
+			const value: number = d[this.data.generatorSettings.itemValueField];
+			const weight: number = this.bellCurveFast((value - centerValue) / centerValue);
+			const comWeightStart = comWeight;
 			comWeight += weight;
 
 			entries.push({
@@ -171,11 +169,11 @@ export class InventoryGeneratorMarkdownRenderChild extends MarkdownRenderChild {
 
 		// console.log(entries);
 
-		let randomValue = Math.random() * comWeight;
+		const randomValue = Math.random() * comWeight;
 
 		for (let i = 0; i < entries.length; i++) {
 			if (entries[i].comWeightStart > randomValue) {
-				let retData = data.find(x => x[this.data.itemIdField] === entries[i].id);
+				const retData = data.find(x => x[this.data.itemIdField] === entries[i].id);
 				if (!retData) {
 					throw new Error();
 				}
