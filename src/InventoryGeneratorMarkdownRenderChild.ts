@@ -1,9 +1,9 @@
-import {MarkdownRenderChild} from 'obsidian';
+import { MarkdownRenderChild } from 'obsidian';
 import InventoryGenerator from './InventoryGenerator.svelte';
 import TTRPGUtilitiesPlugin from './main';
-import {getDefaultInventoryGeneratorData, InventoryGeneratorData} from './utils/Utils';
-import {DataArray, DataviewApi, Literal} from 'obsidian-dataview';
-import {createTable} from './tableBuilder/TableBuilder';
+import { getDefaultInventoryGeneratorData, InventoryGeneratorData } from './utils/Utils';
+import { DataArray, DataviewApi, Literal } from 'obsidian-dataview';
+import { createTable } from './tableBuilder/TableBuilder';
 
 type DvArray = Record<string, Literal>[];
 
@@ -63,14 +63,14 @@ export class InventoryGeneratorMarkdownRenderChild extends MarkdownRenderChild {
 				return true;
 			});
 
-			const {
-				randomItems,
-				totalValue,
-			} = this.selectRandomItemsWithMaxTotalValue(filteredItemsArray, this.data.generatorSettings.maxTotalValue, this.data.generatorSettings.maxItems);
+			const { randomItems, totalValue } = this.selectRandomItemsWithMaxTotalValue(
+				filteredItemsArray,
+				this.data.generatorSettings.maxTotalValue,
+				this.data.generatorSettings.maxItems
+			);
 
-			//await dv.table(["File"], result.map(x => [x.file.link]), this.containerEl, this, this.file);
-			await this.createTable(randomItems);
-			this.tableContainer.createEl('span', {text: `Total Value: ${totalValue}`});
+			this.createTable(randomItems);
+			this.tableContainer.createEl('span', { text: `Total Value: ${totalValue}` });
 		} else {
 			filteredItemsArray = filteredItemsArray.filter(x => {
 				if (!x[this.data.itemIdField]) {
@@ -80,20 +80,19 @@ export class InventoryGeneratorMarkdownRenderChild extends MarkdownRenderChild {
 				return true;
 			});
 
-			const {randomItems, totalValue} = this.selectRandomItems(filteredItemsArray, this.data.generatorSettings.maxItems);
+			const { randomItems, totalValue } = this.selectRandomItems(filteredItemsArray, this.data.generatorSettings.maxItems);
 
-			//await dv.table(["File"], result.map(x => [x.file.link]), this.containerEl, this, this.file);
-			await this.createTable(randomItems);
-			this.tableContainer.createEl('span', {text: `Total Value: ${totalValue}`});
+			this.createTable(randomItems);
+			this.tableContainer.createEl('span', { text: `Total Value: ${totalValue}` });
 		}
 	}
 
-	async createTable(data: any[] | DataArray<any>) {
+	createTable(data: any[] | DataArray<any>): void {
 		this.tableContainer.empty();
-		await createTable(this.data.tableBuilderData, data, this.tableContainer, this, this.file);
+		createTable(this.data.tableBuilderData, data, this.tableContainer);
 	}
 
-	selectRandomItems(data: DvArray, maxItems: number): { randomItems: DvArray, totalValue: number } {
+	selectRandomItems(data: DvArray, maxItems: number): { randomItems: DvArray; totalValue: number } {
 		let totalValue = 0;
 		const randomItems: DvArray = [];
 
@@ -105,10 +104,10 @@ export class InventoryGeneratorMarkdownRenderChild extends MarkdownRenderChild {
 		}
 
 		console.log(randomItems);
-		return {randomItems, totalValue};
+		return { randomItems, totalValue };
 	}
 
-	selectRandomItemsWithMaxTotalValue(dataArray: DvArray, maxValue: number, maxItems: number): { randomItems: DvArray, totalValue: number } {
+	selectRandomItemsWithMaxTotalValue(dataArray: DvArray, maxValue: number, maxItems: number): { randomItems: DvArray; totalValue: number } {
 		const valueWeight = this.data.generatorSettings.itemValueDistribution;
 		const leniency = 0.5;
 
@@ -133,7 +132,7 @@ export class InventoryGeneratorMarkdownRenderChild extends MarkdownRenderChild {
 		}
 
 		console.log(randomItems);
-		return {randomItems, totalValue};
+		return { randomItems, totalValue };
 	}
 
 	filterByValue(dataArray: DvArray, value: number, leniency: number): DvArray {
@@ -149,7 +148,7 @@ export class InventoryGeneratorMarkdownRenderChild extends MarkdownRenderChild {
 	}
 
 	getWeightedRandomItem(data: DvArray, centerValue: number): Record<string, Literal> {
-		const entries: { id: string, value: number, weight: number, comWeightStart: number }[] = [];
+		const entries: { id: string; value: number; weight: number; comWeightStart: number }[] = [];
 		let comWeight = 0;
 
 		for (const d of data) {

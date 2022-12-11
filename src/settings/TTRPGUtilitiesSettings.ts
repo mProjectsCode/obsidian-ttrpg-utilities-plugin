@@ -1,6 +1,6 @@
-import {App, PluginSettingTab, Setting} from 'obsidian';
+import { App, PluginSettingTab } from 'obsidian';
 import TTRPGUtilitiesPlugin from '../main';
-import {InventoryGeneratorData} from '../utils/Utils';
+import { InventoryGeneratorData } from '../utils/Utils';
 
 export interface TTRPGUtilitiesSettings {
 	inventoryGeneratorData: InventoryGeneratorData[];
@@ -19,11 +19,10 @@ export class SampleSettingTab extends PluginSettingTab {
 	}
 
 	display(): void {
-		const {containerEl} = this;
+		const { containerEl } = this;
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', {text: 'Settings for my awesome plugin.'});
-
+		containerEl.createEl('h2', { text: 'Settings for my awesome plugin.' });
 	}
 }

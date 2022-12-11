@@ -13,7 +13,7 @@
 			id: getUUID(),
 			name: `Column ${columnCounter}`,
 			data: '',
-		})
+		});
 		columnCounter += 1;
 		data = data;
 	}
@@ -28,15 +28,19 @@
 <div>
 	<div class="ttrpg-utilities-row-flex">
 		<h4 class="ttrpg-utilities-expand">Table Builder</h4>
-		<Button on:click={() => addColumn()} variant="primary" tooltip="Add Column"><Icon iconName="plus"></Icon></Button>
+		<Button on:click={() => addColumn()} variant="primary" tooltip="Add Column">
+			<Icon iconName="plus"></Icon>
+		</Button>
 	</div>
 
 	<div>
 		{#each data.columns as column}
-			<div  class="ttrpg-utilities-settings-group">
+			<div class="ttrpg-utilities-settings-group">
 				<div class="ttrpg-utilities-row-flex">
 					<h5 class="ttrpg-utilities-expand">{column.name}</h5>
-					<Button on:click={() => deleteColumn(column.id)} variant="destructive"  tooltip="Delete Column"><Icon iconName="x"></Icon></Button>
+					<Button on:click={() => deleteColumn(column.id)} variant="destructive" tooltip="Delete Column">
+						<Icon iconName="x"></Icon>
+					</Button>
 				</div>
 				<SettingItem name="Name">
 					<TextInput bind:value={column.name}></TextInput>

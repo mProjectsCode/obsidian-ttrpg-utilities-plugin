@@ -1,8 +1,7 @@
-import {Editor, MarkdownView, Notice, Plugin} from 'obsidian';
-import {DEFAULT_SETTINGS, SampleSettingTab, TTRPGUtilitiesSettings} from './settings/TTRPGUtilitiesSettings';
-import {DataviewApi, getAPI} from 'obsidian-dataview';
-import {InventoryGeneratorMarkdownRenderChild} from './InventoryGeneratorMarkdownRenderChild';
-import {initUUIDGen} from './utils/Utils';
+import { Editor, MarkdownView, Notice, Plugin } from 'obsidian';
+import { DEFAULT_SETTINGS, SampleSettingTab, TTRPGUtilitiesSettings } from './settings/TTRPGUtilitiesSettings';
+import { DataviewApi, getAPI } from 'obsidian-dataview';
+import { InventoryGeneratorMarkdownRenderChild } from './InventoryGeneratorMarkdownRenderChild';
 
 // Remember to rename these classes and interfaces!
 
@@ -10,9 +9,7 @@ export default class TTRPGUtilitiesPlugin extends Plugin {
 	settings: TTRPGUtilitiesSettings;
 	dataview: DataviewApi;
 
-	async onload() {
-		initUUIDGen();
-
+	async onload(): Promise<void> {
 		await this.loadSettings();
 
 		// This adds an editor command that can perform some operation on the current editor instance
@@ -22,18 +19,13 @@ export default class TTRPGUtilitiesPlugin extends Plugin {
 			editorCallback: (editor: Editor, view: MarkdownView) => {
 				console.log(editor.getSelection());
 				editor.replaceSelection('Sample Editor Command');
-			}
+			},
 		});
 
 		this.registerMarkdownCodeBlockProcessor('ttu-loot-gen', (source, el, ctx) => {
 			console.log('test');
-			ctx.addChild(new InventoryGeneratorMarkdownRenderChild(
-				el,
-				this,
-				source,
-				ctx.sourcePath
-			));
-		})
+			ctx.addChild(new InventoryGeneratorMarkdownRenderChild(el, this, source, ctx.sourcePath));
+		});
 
 		this.app.workspace.onLayoutReady(() => {
 			const dataviewAPI = getAPI(app);
@@ -43,21 +35,19 @@ export default class TTRPGUtilitiesPlugin extends Plugin {
 				this.dataview = dataviewAPI;
 				console.log(this.dataview);
 			}
-		})
+		});
 
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new SampleSettingTab(this.app, this));
 	}
 
-	onunload() {
+	onunload(): void {}
 
-	}
-
-	async loadSettings() {
+	async loadSettings(): Promise<void> {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
 	}
 
-	async saveSettings() {
+	async saveSettings(): Promise<void> {
 		await this.saveData(this.settings);
 	}
 }

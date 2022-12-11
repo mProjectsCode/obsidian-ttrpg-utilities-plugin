@@ -6,7 +6,8 @@
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-		"version": "node version-bump.mjs && git add manifest.json versions.json"
+		"version": "node version-bump.mjs && git add manifest.json versions.json",
+		"format": "prettier --write ."
 	},
 	"keywords": [],
 	"author": "",
@@ -24,6 +25,7 @@
 		"jest": "^28.1.2",
 		"obsidian": "latest",
 		"obsidian-dataview": "^0.5.47",
+		"prettier": "2.7.1",
 		"svelte": "^3.50.1",
 		"svelte-preprocess": "^4.10.7",
 		"ts-jest": "^28.0.5",
@@ -31,6 +33,7 @@
 		"typescript": "4.7.4"
 	},
 	"dependencies": {
+		"@opd-libs/opd-utils-lib": "^0.0.2",
 		"@popperjs/core": "^2.11.6",
 		"obsidian-svelte": "^0.0.26",
 		"svelte-portal": "^2.2.0"

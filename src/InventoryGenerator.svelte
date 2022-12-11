@@ -1,8 +1,7 @@
 <script lang="ts">
-	import {Button, Card, NumberInput, SettingItem, Slider, Switch, TextArea, TextInput} from 'obsidian-svelte';
-	import {getUUID, InventoryGeneratorData} from './utils/Utils';
+	import {Button, NumberInput, SettingItem, Slider, Switch, TextArea, TextInput} from 'obsidian-svelte';
+	import {InventoryGeneratorData} from './utils/Utils';
 	import TableBuilderComponent from './tableBuilder/TableBuilderComponent.svelte';
-	import InventoryGeneratorSettings from './InventoryGeneratorSettings.svelte';
 
 	export let data: InventoryGeneratorData;
 	export let generate: () => Promise<void>;
